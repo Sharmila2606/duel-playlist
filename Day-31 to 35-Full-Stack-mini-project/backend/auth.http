@@ -1,0 +1,212 @@
+@baseUrl = http://localhost:5000/api
+
+##################################################
+# 1. Signup Abi
+##################################################
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "name": "Abi",
+  "email": "abi@example.com",
+  "password": "secret123"
+}
+
+##################################################
+# 2. Signup Kumar
+##################################################
+POST {{baseUrl}}/signup
+Content-Type: application/json
+
+{
+  "name": "Kumar",
+  "email": "kumar@example.com",
+  "password": "secret123"
+}
+
+##################################################
+# 3. Login Abi
+##################################################
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "abi@example.com",
+  "password": "secret123"
+}
+
+###
+# Copy Abi's token here
+@abiToken = 7d0b846a857fbdef72189fe535f7fe1e3fdf7c5056b2cbb09c2559c468f50d87
+
+
+##################################################
+# Abi Current User
+##################################################
+GET {{baseUrl}}/me
+Authorization: Bearer {{abiToken}}
+
+##################################################
+# 4. Abi Save Listing 1
+##################################################
+POST {{baseUrl}}/saved-listings
+Content-Type: application/json
+Authorization: Bearer {{abiToken}}
+
+{
+  "listingId": 1,
+  "location": "Chennai"
+}
+
+##################################################
+# Abi View Saved Listings
+##################################################
+GET {{baseUrl}}/saved-listings
+Authorization: Bearer {{abiToken}}
+
+##################################################
+# 5. Abi Create Inquiry
+##################################################
+POST {{baseUrl}}/inquiries
+Content-Type: application/json
+Authorization: Bearer {{abiToken}}
+
+{
+  "listingId": 1,
+  "message": "Is this listing still available?"
+}
+
+##################################################
+# Abi View Inquiries
+##################################################
+GET {{baseUrl}}/inquiries
+Authorization: Bearer {{abiToken}}
+
+##################################################
+# 6. Logout
+# (Client-side only. Just stop using Abi token.)
+##################################################
+
+##################################################
+# 7. Login Kumar
+##################################################
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "kumar@example.com",
+  "password": "secret123"
+}
+
+###
+# Copy Kumar's token here
+@kumarToken = 2291cec128ee27b484071fd95e1c0616c564c87e793fcae175d67808bc3ff299
+
+##################################################
+# Kumar Current User
+##################################################
+GET {{baseUrl}}/me
+Authorization: Bearer {{kumarToken}}
+
+##################################################
+# 8. Kumar Save Listing 2
+##################################################
+POST {{baseUrl}}/saved-listings
+Content-Type: application/json
+Authorization: Bearer {{kumarToken}}
+
+{
+  "listingId": 2,
+  "location": "Bangalore"
+}
+
+##################################################
+# Kumar View Saved Listings
+##################################################
+GET {{baseUrl}}/saved-listings
+Authorization: Bearer {{kumarToken}}
+
+##################################################
+# 9. Kumar Create Inquiry
+##################################################
+POST {{baseUrl}}/inquiries
+Content-Type: application/json
+Authorization: Bearer {{kumarToken}}
+
+{
+  "listingId": 2,
+  "message": "Can I schedule a visit?"
+}
+
+##################################################
+# Kumar View Inquiries
+##################################################
+GET {{baseUrl}}/inquiries
+Authorization: Bearer {{kumarToken}}
+
+##################################################
+# 10. No Token Tries to View Inquiries
+##################################################
+GET {{baseUrl}}/inquiries
+
+##################################################
+# Expected Result
+# HTTP/1.1 401 Unauthorized
+##################################################
+
+##################################################
+# 11. Kumar Tries to Edit Abi's Inquiry
+# (Assume Abi's inquiry ID = 1)
+##################################################
+PUT {{baseUrl}}/inquiries/1
+Content-Type: application/json
+Authorization: Bearer {{kumarToken}}
+
+{
+  "message": "Kumar should not be allowed to edit Abi's inquiry",
+  "status": "closed"
+}
+
+##################################################
+# Expected Result
+# HTTP/1.1 403 Forbidden
+##################################################
+
+##################################################
+# 12. Kumar Tries to Delete Abi's Inquiry
+# (Assume Abi's inquiry ID = 1)
+##################################################
+DELETE {{baseUrl}}/inquiries/1
+Authorization: Bearer {{kumarToken}}
+
+##################################################
+# Expected Result
+# HTTP/1.1 403 Forbidden
+##################################################
+
+##################################################
+# 13. Login Abi Again
+##################################################
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "abi@example.com",
+  "password": "secret123"
+}
+
+##################################################
+# 14. Abi Should See ONLY Abi's Data
+##################################################
+
+### Abi Inquiries
+GET {{baseUrl}}/inquiries
+Authorization: Bearer {{abiToken}}
+
+### Abi Saved Listings
+GET {{baseUrl}}/saved-listings
+Authorization: Bearer {{abiToken}}
+
+### Abi Current User
+GET {{baseUrl}}/me
+Authorization: Bearer {{abiToken}}

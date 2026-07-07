@@ -1,0 +1,32 @@
+export const initialBooks = [
+  {
+    id: 1,
+    title: "Deep Work",
+    author: "Cal Newport",
+    category: "Productivity",
+    status: "Reading",
+    priority: "High",
+    completed: false,
+    accent: "from-violet-500 to-cyan-400",
+  },
+  {
+    id: 2,
+    title: "Atomic Habits",
+    author: "James Clear",
+    category: "Self Growth",
+    status: "Completed",
+    priority: "Medium",
+    completed: true,
+    accent: "from-emerald-400 to-cyan-400",
+  },
+  {
+    id: 3,
+    title: "Designing Your Life",
+    author: "Bill Burnett",
+    category: "Career",
+    status: "Pending",
+    priority: "Low",
+    completed: false,
+    accent: "from-amber-400 to-violet-500",
+  },
+];
